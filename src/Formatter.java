@@ -12,8 +12,7 @@ import java.awt.event.*;
 // Use Box.createRigidArea to make sure that the textboxes aren't oversized
 // when you use them
 public class Formatter extends JFrame implements ActionListener {
-    JPanel panel = new JPanel();
-
+    JPanel panel = new JPanel(new GridBagLayout());
     JPanel subPanel1 = new JPanel(new FlowLayout());
     JPanel subPanel2 = new JPanel(new FlowLayout());
     JPanel subPanel3 = new JPanel(new FlowLayout());
@@ -22,13 +21,7 @@ public class Formatter extends JFrame implements ActionListener {
 
     JTextArea textArea1 = new JTextArea();
     JTextArea textArea2 = new JTextArea();
-    JScrollPane scrollPane1 = new JScrollPane(textArea1);
-    JScrollPane scrollPane2 = new JScrollPane(textArea2);
     JButton button1 = new JButton("Format");
-    JMenuBar menuBar1 = new JMenuBar();
-    JMenu file;
-    JMenuItem newOption;
-    JMenuItem quitOption;
     public static void main(String[] args) {
         Formatter gui = new Formatter();
     }
@@ -36,15 +29,15 @@ public class Formatter extends JFrame implements ActionListener {
     public Formatter() {
         // Defines title, size, default operation, and layout of window
         super("PL/SQL Formatter");
-        setSize(800, 800);
+        setSize(700, 300);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        GridBagConstraints c = new GridBagConstraints();
 
         textArea1.setPreferredSize(new Dimension(525, 100));
         textArea1.setLineWrap(true);
         textArea1.setWrapStyleWord(true);
-        scrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         textArea2.setPreferredSize(new Dimension(525, 100));
         textArea2.setLineWrap(true);
@@ -52,18 +45,24 @@ public class Formatter extends JFrame implements ActionListener {
 
         subPanel1.add(label1);
         subPanel1.add(textArea1);
-        subPanel1.setAlignmentY(Component.TOP_ALIGNMENT);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 1;
+        panel.add(subPanel1, c);
 
         subPanel2.add(button1);
-        subPanel2.setAlignmentY(Component.CENTER_ALIGNMENT);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 2;
+        panel.add(subPanel2, c);
 
         subPanel3.add(label2);
         subPanel3.add(textArea2);
-        subPanel3.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 3;
+        panel.add(subPanel3, c);
 
-        panel.add(subPanel1);
-        panel.add(subPanel2);
-        panel.add(subPanel3);
         add(panel);
         setVisible(true);
     }
