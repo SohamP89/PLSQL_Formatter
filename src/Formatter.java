@@ -8,20 +8,35 @@ because it provides modern, clean, and easy-to-use layouts. Alternatively, you c
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
-// Use Box.createRigidArea to make sure that the textboxes aren't oversized
-// when you use them
+/*
+Used this website as a reference: https://stackoverflow.com/questions/6710350/copying-text-to-the-clipboard-using-java
+ */
+
 public class Formatter extends JFrame implements ActionListener {
     JPanel panel = new JPanel(new GridBagLayout());
     JPanel subPanel1 = new JPanel(new FlowLayout());
     JPanel subPanel2 = new JPanel(new FlowLayout());
     JPanel subPanel3 = new JPanel(new FlowLayout());
+    JPanel subPanel4 = new JPanel(new FlowLayout());
     JLabel label1 = new JLabel("Original:");
     JLabel label2 = new JLabel("Formatted:");
 
     JTextArea textArea1 = new JTextArea();
     JTextArea textArea2 = new JTextArea();
-    JButton button1 = new JButton("Format");
+    JButton formatButton = new JButton("Format");
+    JButton clearButton = new JButton("Clear");
+    JButton downloadButton = new JButton("Download");
+    JButton copyButton = new JButton("Copy to Clipboard");
+    JFileChooser fc = new JFileChooser();
+
     public static void main(String[] args) {
         Formatter gui = new Formatter();
     }
@@ -29,17 +44,16 @@ public class Formatter extends JFrame implements ActionListener {
     public Formatter() {
         // Defines title, size, default operation, and layout of window
         super("PL/SQL Formatter");
-        setSize(700, 300);
+        setSize(700, 650);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         GridBagConstraints c = new GridBagConstraints();
 
-        textArea1.setPreferredSize(new Dimension(525, 100));
+        textArea1.setPreferredSize(new Dimension(525, 250));
         textArea1.setLineWrap(true);
         textArea1.setWrapStyleWord(true);
 
-        textArea2.setPreferredSize(new Dimension(525, 100));
+        textArea2.setPreferredSize(new Dimension(525, 250));
         textArea2.setLineWrap(true);
         textArea2.setWrapStyleWord(true);
 
@@ -50,11 +64,31 @@ public class Formatter extends JFrame implements ActionListener {
         c.gridy = 1;
         panel.add(subPanel1, c);
 
-        subPanel2.add(button1);
+        formatButton.addActionListener(Formatter.this);
+        subPanel2.add(formatButton);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 2;
+
+        clearButton.addActionListener(Formatter.this);
+        subPanel2.add(clearButton);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 2;
         panel.add(subPanel2, c);
+
+        downloadButton.addActionListener(Formatter.this);
+        subPanel4.add(downloadButton);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 4;
+
+        copyButton.addActionListener(Formatter.this);
+        subPanel4.add(copyButton);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 4;
+        panel.add(subPanel4, c);
 
         subPanel3.add(label2);
         subPanel3.add(textArea2);
@@ -69,6 +103,40 @@ public class Formatter extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
 
+        if ( e.getSource() == formatButton ) {
+            textArea2.setText(textArea1.getText());
+        }
+
+        if ( e.getSource() == clearButton ) {
+            textArea1.setText("");
+            textArea2.setText("");
+        }
+
+        if ( e.getSource() == copyButton ) {
+            StringSelection stringSelection = new StringSelection(textArea2.getText());
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        }
+
+        if ( e.getSource() == downloadButton ) {
+            int returnVal = fc.showSaveDialog(Formatter.this);
+            if ( returnVal == JFileChooser.APPROVE_OPTION ) {
+                FileSaveAction();
+            }
+        }
+    }
+
+    private void FileSaveAction() {
+        try {
+            File file = fc.getSelectedFile();
+            FileWriter fw = new FileWriter(file, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(textArea2.getText());
+            bw.close();
+        }
+        catch ( IOException e ) {
+            e.printStackTrace();
+        }
     }
 
 }
