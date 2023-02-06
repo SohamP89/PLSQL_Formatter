@@ -20,7 +20,7 @@ import java.io.IOException;
 Used this website as a reference: https://stackoverflow.com/questions/6710350/copying-text-to-the-clipboard-using-java
  */
 
-public class Formatter extends JFrame implements ActionListener {
+public class SqlFormatter extends JFrame implements ActionListener {
     JPanel panel = new JPanel(new GridBagLayout());
     JPanel subPanel1 = new JPanel(new FlowLayout());
     JPanel subPanel2 = new JPanel(new FlowLayout());
@@ -38,10 +38,10 @@ public class Formatter extends JFrame implements ActionListener {
     JFileChooser fc = new JFileChooser();
 
     public static void main(String[] args) {
-        Formatter gui = new Formatter();
+        SqlFormatter gui = new SqlFormatter();
     }
 
-    public Formatter() {
+    public SqlFormatter() {
         // Defines title, size, default operation, and layout of window
         super("PL/SQL Formatter");
         setSize(700, 650);
@@ -64,26 +64,26 @@ public class Formatter extends JFrame implements ActionListener {
         c.gridy = 1;
         panel.add(subPanel1, c);
 
-        formatButton.addActionListener(Formatter.this);
+        formatButton.addActionListener(SqlFormatter.this);
         subPanel2.add(formatButton);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 2;
 
-        clearButton.addActionListener(Formatter.this);
+        clearButton.addActionListener(SqlFormatter.this);
         subPanel2.add(clearButton);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 2;
         panel.add(subPanel2, c);
 
-        downloadButton.addActionListener(Formatter.this);
+        downloadButton.addActionListener(SqlFormatter.this);
         subPanel4.add(downloadButton);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 4;
 
-        copyButton.addActionListener(Formatter.this);
+        copyButton.addActionListener(SqlFormatter.this);
         subPanel4.add(copyButton);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
@@ -119,7 +119,7 @@ public class Formatter extends JFrame implements ActionListener {
         }
 
         if ( e.getSource() == downloadButton ) {
-            int returnVal = fc.showSaveDialog(Formatter.this);
+            int returnVal = fc.showSaveDialog(SqlFormatter.this);
             if ( returnVal == JFileChooser.APPROVE_OPTION ) {
                 FileSaveAction();
             }
