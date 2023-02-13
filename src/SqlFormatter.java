@@ -172,7 +172,7 @@ public class SqlFormatter extends JFrame implements ActionListener {
                 textArea2.append("\n    " + token + " ");
             }
             else if ( token.endsWith(",") ) {
-                textArea2.append(token + "\n");
+                textArea2.append(token + "\n            ");
             } else
                 textArea2.append(token + " ");
         }
