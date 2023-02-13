@@ -5,6 +5,7 @@ easier for both developers and support engineers to manage databases and fix any
 From now on, for any GUI applications in Java, use JGoodies instead of default Swing
 because it provides modern, clean, and easy-to-use layouts. Alternatively, you could just use GridBagLayout.
  */
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -15,6 +16,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 /*
 Used this website as a reference: https://stackoverflow.com/questions/6710350/copying-text-to-the-clipboard-using-java
@@ -26,11 +28,13 @@ public class SqlFormatter extends JFrame implements ActionListener {
     JPanel subPanel2 = new JPanel(new FlowLayout());
     JPanel subPanel3 = new JPanel(new FlowLayout());
     JPanel subPanel4 = new JPanel(new FlowLayout());
-    JLabel label1 = new JLabel("Original:");
-    JLabel label2 = new JLabel("Formatted:");
+    JLabel label1 = new JLabel("Original Query:");
+    JLabel label2 = new JLabel("Formatted Query:");
 
     JTextArea textArea1 = new JTextArea();
+    JScrollPane scrollPane1 = new JScrollPane(textArea1);
     JTextArea textArea2 = new JTextArea();
+    JScrollPane scrollPane2 = new JScrollPane(textArea2);
     JButton formatButton = new JButton("Format");
     JButton clearButton = new JButton("Clear");
     JButton downloadButton = new JButton("Download");
@@ -43,7 +47,7 @@ public class SqlFormatter extends JFrame implements ActionListener {
 
     public SqlFormatter() {
         // Defines title, size, default operation, and layout of window
-        super("PL/SQL Formatter");
+        super("SQL Formatter");
         setSize(700, 650);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -57,8 +61,14 @@ public class SqlFormatter extends JFrame implements ActionListener {
         textArea2.setLineWrap(true);
         textArea2.setWrapStyleWord(true);
 
+        scrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        scrollPane1.setSize(100, 100);
+        scrollPane2.setSize(100, 100);
+
         subPanel1.add(label1);
-        subPanel1.add(textArea1);
+        subPanel1.add(scrollPane1);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 1;
@@ -91,7 +101,7 @@ public class SqlFormatter extends JFrame implements ActionListener {
         panel.add(subPanel4, c);
 
         subPanel3.add(label2);
-        subPanel3.add(textArea2);
+        subPanel3.add(scrollPane2);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 3;
@@ -104,7 +114,7 @@ public class SqlFormatter extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if ( e.getSource() == formatButton ) {
-            textArea2.setText(textArea1.getText());
+            formatSql();
         }
 
         if ( e.getSource() == clearButton ) {
@@ -136,6 +146,35 @@ public class SqlFormatter extends JFrame implements ActionListener {
         }
         catch ( IOException e ) {
             e.printStackTrace();
+        }
+    }
+
+    private void formatSql() {
+        // Put next token into a specific variable instead of just using nextToken()
+        // Because nextToken() skips and prints every other token, which messes up your output
+
+        StringTokenizer st = new StringTokenizer(textArea1.getText());
+        String token;
+
+        while ( st.hasMoreTokens() ) {
+            token = st.nextToken();
+            System.out.println(token);
+            if ( token.equals("SELECT") ) {
+                textArea2.append(token + " ");
+            }
+            else if ( token.equals("FROM") ) {
+                textArea2.append("\n  " + token + " ");
+            }
+            else if ( token.equals("WHERE") ) {
+                textArea2.append("\n " + token + " ");
+            }
+            else if ( token.equals("AND") ) {
+                textArea2.append("\n    " + token + " ");
+            }
+            else if ( token.endsWith(",") ) {
+                textArea2.append(token + "\n");
+            } else
+                textArea2.append(token + " ");
         }
     }
 
