@@ -122,7 +122,7 @@ public class SqlFormatter extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if ( e.getSource() == formatButton ) {
-            textArea2.append("");
+            textArea2.setText("");
             formatSql();
         }
 
@@ -229,13 +229,29 @@ public class SqlFormatter extends JFrame implements ActionListener {
             else if ( token.equalsIgnoreCase("CASE") ) {
                 textArea2.append("\n       " + token.toUpperCase() + " ");
             }
-            else if ( token.equalsIgnoreCase("COUNT") || token.toUpperCase().startsWith("COUNT(") ) {
+            else if ( token.equalsIgnoreCase("COUNT(") || token.toUpperCase().startsWith("COUNT(") ) {
 //                textArea2.append("            " + token.toUpperCase());
+                System.out.println("\nFound it!\n");
                 textArea2.append(token.toUpperCase());
             }
             else if ( token.equalsIgnoreCase("LEFT") ) {
                 isLeftThere += 1;
-                textArea2.append("\n   " + token.toUpperCase() + " ");
+                textArea2.append("\n    " + token.toUpperCase() + " ");
+            }
+            else if ( token.equalsIgnoreCase("ORDER") ) {
+                textArea2.append("\n " + token.toUpperCase() + " ");
+            }
+            else if ( token.equalsIgnoreCase("BY") ) {
+                textArea2.append(token.toUpperCase() + " ");
+            }
+            else if ( token.equalsIgnoreCase("NOT") ) {
+                textArea2.append(token.toUpperCase() + " ");
+            }
+            else if ( token.equalsIgnoreCase("IN") ) {
+                textArea2.append(token.toUpperCase() + " ");
+            }
+            else if ( token.equalsIgnoreCase("NULL") ) {
+                textArea2.append(token.toUpperCase() + " ");
             }
             else if ( token.equalsIgnoreCase("GROUP") ) {
 //                if ( asThere == 2 ) {
@@ -254,19 +270,6 @@ public class SqlFormatter extends JFrame implements ActionListener {
                 asThere += 1;
                 textArea2.append(" " + token.toUpperCase() + " ");
             }
-            else if ( token.endsWith(",") ) {
-
-                for (String function:
-                        FUNCTIONS) {
-                    if ( token.contains(function) ) {
-                        System.out.println("FUNCTION FOUND!");
-                        textArea2.append(token + " ");
-                        break;
-                    }
-                }
-
-                textArea2.append(token + "\n            ");
-            }
             else if ( token.equalsIgnoreCase("JOIN") ) {
                 if ( isLeftThere == 0 ) {
                     textArea2.append("\n    " + token.toUpperCase() + " ");
@@ -276,6 +279,10 @@ public class SqlFormatter extends JFrame implements ActionListener {
                     isLeftThere = 0;
                 }
 
+            }
+
+            else if ( token.equalsIgnoreCase("UNION") ) {
+                textArea2.append("\n" + token.toUpperCase() + " ");
             }
 
             else if ( token.equals("(") || token.contains("(") ) {
@@ -296,7 +303,22 @@ public class SqlFormatter extends JFrame implements ActionListener {
                     textArea2.append(token + " ");
                 }
                 else if ( token.endsWith(")") ) {
-                    textArea2.append(token + " ");
+                    textArea2.append(token + " ");////////askjldalksjdlkasjdlka
+
+                    boolean functionFound = false;
+
+                    for (String func:
+                         FUNCTIONS) {
+                        if ( token.contains(func) ) {
+                            functionFound = true;
+                        }
+                    }
+
+                    if ( functionFound ) {
+                        textArea2.append(" ");
+                        functionFound = false;
+                    }
+
                 }
                 else {
                     String replcStr = token.replace(",", ",\n            ");
