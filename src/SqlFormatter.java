@@ -207,7 +207,6 @@ public class SqlFormatter extends JFrame implements ActionListener {
             }
 
             else if ( token.equalsIgnoreCase("COUNT(") || token.toUpperCase().startsWith("COUNT(") ) {
-//                System.out.println("\nFound it!\n");
                 textArea2.append(token.toUpperCase());
             }
 
@@ -264,12 +263,6 @@ public class SqlFormatter extends JFrame implements ActionListener {
 
             else if ( token.contains("(") ) {
                 asThere += 1;
-//                if ( asThere == 2) {
-//                    textArea2.append("\n" + token + " ");
-//                }
-//                else {
-//                    textArea2.append(token);
-//                }
 
                 textArea2.append(token);
             }
@@ -300,14 +293,12 @@ public class SqlFormatter extends JFrame implements ActionListener {
                 }
                 else {
                     String replcStr = token.replace(",", ",\n            ");
-//                    System.out.println("String: {" + replcStr + "}");
                     textArea2.append(replcStr);
                 }
             }
 
             else if ( token.startsWith(",") ) {
                 String replcStr = token.replace(",", ",\n           ");
-//                System.out.println("String: " + replcStr);
                 textArea2.append(replcStr);
             }
 
